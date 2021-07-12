@@ -1,0 +1,133 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: LiquidityPool
+    network: kovan
+    source:
+      address: "0x67c4B1E1D747069d6FB5f1db08EFCA7563427637"
+      abi: LiquidityPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Pool
+        - BuyerRecord
+        - LPRecord
+        - PoolSnapshot
+        - Template
+        - PoolRecord
+        - OrderBookEntry
+      abis:
+        - name: LiquidityPool
+          file: abis/LiquidityPool.json
+      eventHandlers:
+        # Liquidity Pool Events
+        - event: Deposited(indexed address,indexed uint256,uint256)
+          handler: handleDeposited
+        - event: Withdrawn(indexed address,indexed uint256,uint256)
+          handler: handleWithdrawn
+        - event: CriteriaSetSelected(indexed address,indexed uint256,bytes32)
+          handler: handleCriteriaSetSelected
+        - event: CurveSelected(indexed address,indexed uint256,bytes32)
+          handler: handleCurveSelected
+        # Buying / Selling Options
+        - event: OptionsBought(indexed address,indexed address,uint256,uint256)
+          handler: handleOptionsBought
+        - event: OptionsSold(indexed address,indexed uint256,indexed address,bytes32,uint256,uint256,uint256)
+          handler: handleOptionsSold
+        - event: OptionSettled(indexed address,uint256)
+          handler: handleOptionsSettled
+        - event: OptionSettlementDistributed(indexed address,indexed address,indexed uint256,uint256)
+          handler: handleOptionSettlementDistributed
+      file: ./src/pools.ts
+  - kind: ethereum/contract
+    name: CurveManager
+    network: kovan
+    source:
+      address: "0xa08Eb422A1D7087634eDcB886dBE97e8f5E3eC06"
+      abi: CurveManager
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Curve
+      abis:
+        - name: CurveManager
+          file: abis/ICurveManager.json
+      eventHandlers:
+        - event: CurveAdded(indexed bytes32,(int256,int256,int256,int256,int256))
+          handler: handleCurveAdded
+      file: ./src/curves.ts
+  - kind: ethereum/contract
+    name: CriteriaManager
+    network: kovan
+    source:
+      address: "0x0E5e316397b1B55cd5859b0D707a61bC599D02d1"
+      abi: CriteriaManager
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Criteria
+        - CriteriaSet
+        - CriteriaJoinedCriteriaSet
+      abis:
+        - name: CriteriaManager
+          file: abis/ICriteriaManager.json
+      eventHandlers:
+        - event: CriteriaAdded(indexed bytes32,(address,address,bool,uint256,uint256))
+          handler: handleCriteriaAdded
+        - event: CriteriaSetAdded(indexed bytes32,bytes32[])
+          handler: handleCriteriaSetAdded
+      file: ./src/criterias.ts
+  - kind: ethereum/contract
+    name: OtokenFactoryContract
+    network: kovan
+    source:
+      address: "0xb9D17Ab06e27f63d0FD75099d5874a194eE623e2"
+      abi: OtokenFactoryContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - OToken
+      abis:
+        - name: OtokenFactoryContract
+          file: abis/OtokenFactory.json
+        - name: Otoken
+          file: abis/Otoken.json
+      eventHandlers:
+        - event: OtokenCreated(address,address,indexed address,indexed address,indexed address,uint256,uint256,bool)
+          handler: handleOtokenCreate
+      file: ./src/otoken.ts
+  - kind: ethereum/contract
+    name: Whitelist
+    network: kovan
+    source:
+      address: ""
+      abi: Whitelist
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - Underlying
+        - Collateral
+      abis:
+        - name: Whitelist
+          file: abis/Whitelist.json
+        - name: IERC20MetadataUpgradeable
+          file: abis/IERC20MetadataUpgradeable.json
+      eventHandlers:
+        - event: CollateralWhitelisted(indexed address)
+          handler: handleCollateralWhitelist
+        - event: ProductWhitelisted(bytes32,indexed address,indexed address,indexed address,bool)
+          handler: handleProductWhitelist
+      file: ./src/token.ts

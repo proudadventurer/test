@@ -1,0 +1,10 @@
+{
+    "collateralTokenAddress": "0xb7a4f3e9097c08da09517b5ab877f7a917224ede",
+    "opynAddressBookAddress": "0x8812f219f507e8cfe9d2f1e790164714c5e06a73",
+    "liquidityPoolAddress": "0x67c4B1E1D747069d6FB5f1db08EFCA7563427637",
+    "curveManagerAddress": "0xa08Eb422A1D7087634eDcB886dBE97e8f5E3eC06",
+    "criteriaManagerAddress": "0x0E5e316397b1B55cd5859b0D707a61bC599D02d1",
+    "otokenFactoryAddress": "0xb9D17Ab06e27f63d0FD75099d5874a194eE623e2",
+    "network": "kovan",
+    "theGraphNetworkName": "kovan"
+}
